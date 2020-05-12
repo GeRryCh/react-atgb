@@ -1,7 +1,9 @@
 import React from 'react'
+import Loading from './Loading'
 
 function Answer({ isBetter }) {
-  if (typeof isBetter === 'undefined') { return null }
+  return <Loading />
+  if (typeof isBetter === 'undefined') { return <Loading /> }
   if (isBetter) {
     return <h1>YES</h1>
   }
