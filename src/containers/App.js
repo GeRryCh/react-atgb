@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import Answer from '../components/Answer'
 import 'tachyons'
 
 class App extends Component {
@@ -69,7 +70,7 @@ class App extends Component {
       .then(isBetter)
       .then(ib => log('isBetter', ib))
       .then(result => {
-        this.setState({ isBetter: result ? 'YES' : 'NO' })
+        this.setState({ isBetter: result })
       });
   }
 
@@ -79,7 +80,7 @@ class App extends Component {
     return (
       <div className='tc'>
         <header>Are things getting any better?</header>
-        <h1>{isBetter}</h1>
+        <Answer isBetter={isBetter} />
         <h2>Aren't all the information and news regarding COVID-19 situation make you anxious and probably sad and intimidated,
         while the only information you are looking for is if the situation has improved or not?
         Then this site is for you! It shows yes/no answer to the only question we have. Is it going ot be better?
