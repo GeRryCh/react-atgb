@@ -5,13 +5,11 @@ import 'tachyons'
 class App extends Component {
   constructor() {
     super()
-    this.state = {
-      statistics: []
-    }
+    this.state = {}
   }
 
   componentDidMount() {
-    async function fetchStatistics(that) {
+    async function fetchStatistics() {
       const formatDate = function (date) {
         //getMonth() range is [0:11]
         const rawMonth = date.getMonth() + 1
@@ -26,25 +24,62 @@ class App extends Component {
       const fromDate = new Date(toDate)
       //3 days back
       fromDate.setDate(toDate.getDate() - 3)
+      //fetch confirmed cases
       const params = `from=${formatDate(fromDate)}&to=${formatDate(toDate)}`
-      const response = await fetch(`https://api.covid19api.com/country/israel?${params}`, {
+      const response = await fetch(`https://api.covid19api.com/country/israel/status/confirmed?${params}`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       })
-      const statistics = await response.json()
-      console.log(statistics)
-      that.setState({ statistics: statistics })
+      const result = await response.json()
+      if (result.length === 0) {
+        throw 'Unable to retrieve statistics'
+      }
+      return result
     };
 
-    fetchStatistics(this);
+    function log(title, obj) {
+      console.log(title, obj)
+      return obj
+    }
+
+    function calculateGrowth(statistics) {
+      const growth = statistics
+        .map(s => s.Cases)
+        .reduce((acc, curr, idx, cases) => {
+          if (idx === cases.length - 1) { return acc }
+          const next = cases[idx + 1]
+          //growth in percent
+          acc.push((next - curr) / next)
+          return acc
+        }, [])
+      return growth
+    }
+
+    function isBetter(growth) {
+      if (growth.count < 2) {
+        throw 'Unable to retrieve statistics'
+      }
+
+      return growth[1] < growth[0]
+    }
+
+    fetchStatistics()
+      .then(s => log('statistics', s))
+      .then(calculateGrowth)
+      .then(g => log('growth', g))
+      .then(isBetter)
+      .then(ib => log('isBetter', ib))
+      .then(result => {
+        this.setState({ isBetter: result ? 'YES' : 'NO' })
+      });
   }
 
   render() {
-    const { statistics } = this.state
-    console.log(statistics)
+    const { isBetter } = this.state
+
     return (
       <div className='tc'>
         <header>Are things getting any better?</header>
-        <h1>YES</h1>
+        <h1>{isBetter}</h1>
         <h2>Aren't all the information and news regarding COVID-19 situation make you anxious and probably sad and intimidated,
         while the only information you are looking for is if the situation has improved or not?
         Then this site is for you! It shows yes/no answer to the only question we have. Is it going ot be better?
