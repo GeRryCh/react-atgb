@@ -36,10 +36,14 @@
   }
 }
 
-.yes {
+.pos-color {
   color: #21bf73;
 }
 
-.no {
+.neg-color {
   color: #ff798b;
+}
+
+.error-color {
+  color: #eb87be;
 }

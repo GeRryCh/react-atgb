@@ -32,7 +32,7 @@ class App extends Component {
       })
       const result = await response.json()
       if (result.length === 0) {
-        throw 'Unable to retrieve statistics'
+        throw new Error('Unable to retrieve statistics')
       }
       return result
     };
@@ -81,21 +81,24 @@ class App extends Component {
       .then(g => log('growth', g))
       .then(isBetter)
       .then(ib => log('isBetter', ib))
+      .catch(error => this.setState({ error: error }))
       .then(result => {
         this.setState({ isBetter: result })
       });
+
   }
 
   render() {
-    const { isBetter } = this.state
-
+    const { isBetter, error } = this.state
     return (
       <div className='main tc mt3 pl3 pr3'>
         <header className='f2'>Are things getting better in your country?</header>
-        <Answer className='f1' isBetter={isBetter} />
+        {error ? <h2 className='error-color i'>Oops. An error has occured 🤷🏻‍♀️<br />{error.message}</h2> :
+          <Answer isBetter={isBetter} />
+        }
         <p className='f3 fw4'>Aren't all the information and news regarding COVID-19 situation make you anxious and probably sad and intimidated,
         while the only information you are looking for is if the situation has improved or not?
-        Then this site is for you! It displays an answer, based on a statistics updated every day, to the only question you have. Is it going to be ok?
+        Then this site is for you! It displays an answer, based on a statistics updated every day, to the only question you have.
           </p>
         <footer className='fw'>
           For more information check <a href='https://www.worldometers.info/coronavirus/'>Corona Virus Updates</a> for your country
