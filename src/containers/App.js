@@ -43,16 +43,28 @@ class App extends Component {
     }
 
     function calculateGrowth(statistics) {
-      const growth = statistics
-        .map(s => s.Cases)
-        .reduce((acc, curr, idx, cases) => {
-          if (idx === cases.length - 1) { return acc }
-          const next = cases[idx + 1]
+      var reduceProperty = function (xs, groupBy, prop) {
+        return xs.reduce(function (rv, x) {
+          rv[x[groupBy]] = rv[x[groupBy]] || 0
+          rv[x[groupBy]] += x[prop];
+          return rv;
+        }, {});
+      };
+      const processed = reduceProperty(statistics, 'Date', 'Cases')
+      return Object.values(processed)
+        .reduce((acc, curr) => {
+          if (acc.prev === 0) {
+            acc.prev = curr
+            return acc
+          }
           //growth in percent
-          acc.push((next - curr) / next)
+          acc.growth.push((curr - acc.prev) / curr)
+          acc.prev = curr
           return acc
-        }, [])
-      return growth
+        }, {
+          growth: [],
+          prev: 0
+        }).growth
     }
 
     function isBetter(growth) {
@@ -83,7 +95,7 @@ class App extends Component {
         <Answer className='f1' isBetter={isBetter} />
         <p className='f3 fw4'>Aren't all the information and news regarding COVID-19 situation make you anxious and probably sad and intimidated,
         while the only information you are looking for is if the situation has improved or not?
-        Then this site is for you! It shows yes/no answer to the only question we have. Is it going ot be better?
+        Then this site is for you! It displays an answer, based on a statistics updated every day, to the only question you have. Is it going to be ok?
           </p>
         <footer className='fw'>
           For more information check <a href='https://www.worldometers.info/coronavirus/'>Corona Virus Updates</a> for your country
