@@ -78,14 +78,14 @@ class App extends Component {
     const { isBetter } = this.state
 
     return (
-      <div className='tc'>
-        <header>Are things getting any better?</header>
-        <Answer isBetter={isBetter} />
-        <h2>Aren't all the information and news regarding COVID-19 situation make you anxious and probably sad and intimidated,
+      <div className='main tc mt3 pl3 pr3'>
+        <header className='f2'>Are things getting better in your country?</header>
+        <Answer className='f1' isBetter={isBetter} />
+        <p className='f3 fw4'>Aren't all the information and news regarding COVID-19 situation make you anxious and probably sad and intimidated,
         while the only information you are looking for is if the situation has improved or not?
         Then this site is for you! It shows yes/no answer to the only question we have. Is it going ot be better?
-          </h2>
-        <footer>
+          </p>
+        <footer className='fw'>
           For more information check <a href='https://www.worldometers.info/coronavirus/'>Corona Virus Updates</a> for your country
         </footer>
       </div>
