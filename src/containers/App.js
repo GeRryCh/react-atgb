@@ -11,7 +11,45 @@ class App extends Component {
   }
 
   componentDidMount() {
-    async function fetchStatistics() {
+    this.fetchCountries()
+  }
+
+  async fetchCountries() {
+    async function _fetchCountries() {
+      const response = await fetch('https://api.covid19api.com/countries', {
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      })
+      return response.json()
+    }
+
+    const result = await _fetchCountries()
+    this.log('countries', result)
+    if (result.length === 0) {
+      throw new Error('Unable to retrieve countries')
+    }
+
+    this.setState({
+      countries: result
+        .sort((lhs, rhs) => {
+          if (lhs.Country > rhs.Country) {
+            return 1
+          }
+          if (lhs.Country < rhs.Country) {
+            return -1
+          }
+          return 0
+        })
+        .map(c => {
+          return {
+            label: c.Country,
+            value: c.Slug
+          }
+        })
+    })
+  }
+
+  async fetchStatistics(country) {
+    async function _fetchStatistics(country) {
       const formatDate = function (date) {
         //getMonth() range is [0:11]
         const rawMonth = date.getMonth() + 1
@@ -28,20 +66,11 @@ class App extends Component {
       fromDate.setDate(toDate.getDate() - 3)
       //fetch confirmed cases
       const params = `from=${formatDate(fromDate)}&to=${formatDate(toDate)}`
-      const response = await fetch(`https://api.covid19api.com/country/israel/status/confirmed?${params}`, {
+      const response = await fetch(`https://api.covid19api.com/country/${country}/status/confirmed?${params}`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       })
-      const result = await response.json()
-      if (result.length === 0) {
-        throw new Error('Unable to retrieve statistics')
-      }
-      return result
+      return response.json()
     };
-
-    function log(title, obj) {
-      console.log(title, obj)
-      return obj
-    }
 
     function calculateGrowth(statistics) {
       var reduceProperty = function (xs, groupBy, prop) {
@@ -70,23 +99,32 @@ class App extends Component {
 
     function isBetter(growth) {
       if (growth.count < 2) {
-        throw 'Unable to retrieve statistics'
+        throw new Error('Unable to retrieve statistics')
       }
 
       return growth[1] < growth[0]
     }
 
-    fetchStatistics()
-      .then(s => log('statistics', s))
+    const result = _fetchStatistics(country)
+    if (result.length === 0) {
+      throw new Error('Unable to retrieve statistics')
+    }
+
+    result
+      .then(s => this.log('statistics', s))
       .then(calculateGrowth)
-      .then(g => log('growth', g))
+      .then(g => this.log('growth', g))
       .then(isBetter)
-      .then(ib => log('isBetter', ib))
+      .then(ib => this.log('isBetter', ib))
       .catch(error => this.setState({ error: error }))
       .then(result => {
         this.setState({ isBetter: result })
       });
+  }
 
+  log(title, obj) {
+    console.log(title, obj)
+    return obj
   }
 
   onCountrySelect = (country) => {
@@ -94,12 +132,7 @@ class App extends Component {
   }
 
   render() {
-    const { isBetter, error } = this.state
-    const options = [
-      { label: 'Israel', value: 'israel' },
-      { label: 'United States', value: 'us' },
-      { label: 'Spain', value: 'sp' }
-    ]
+    const { countries, isBetter, error } = this.state
     return (
       <div className='main tc mt5 pl3 pr3'>
         <header className='f2'>Are things getting better in your country?</header>
@@ -107,14 +140,15 @@ class App extends Component {
           className='tl mt4 measure center black-color'
           placeholderClassName='mv1-l black-color'
           arrowClassName='mv1-l'
-          options={options}
+          options={countries}
           onChange={this.onCountrySelect}
           placeholder="Select a country"
         />
-        {error ? <h2 className='error-color i'>Oops. An error has occured 🤷🏻‍♀️<br />{error.message}</h2> :
-          <Answer isBetter={isBetter} />
-        }
-        <p className='f3 fw4'>Aren't all the information and news regarding COVID-19 situation make you anxious and probably sad and intimidated,
+        {/* {error
+          ? <h2 className='error-color i'>Oops. An error has occured 🤷🏻‍♀️<br />{error.message}</h2>
+          : <Answer isBetter={isBetter} />
+        } */}
+        <p className='f3 fw4'>Aren't all the information and news about COVID-19 situation in the world make you anxious, sad or intimidated,
         while the only information you are looking for is if the situation has improved or not?
         Then this site is for you! It displays an answer, based on a statistics updated every day, to the only question you have.
           </p>
