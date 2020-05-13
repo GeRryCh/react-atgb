@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Answer from '../components/Answer'
+import CountryStatus from '../components/CountryStatus'
 import Dropdown from '../components/Dropdown'
 import 'tachyons'
 
@@ -66,7 +66,7 @@ class App extends Component {
       fromDate.setDate(toDate.getDate() - 3)
       //fetch confirmed cases
       const params = `from=${formatDate(fromDate)}&to=${formatDate(toDate)}`
-      const response = await fetch(`https://api.covid19api.com/country/${country}/status/confirmed?${params}`, {
+      const response = await fetch(`https://api.covid19api.com/country/${country.value}/status/confirmed?${params}`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       })
       return response.json()
@@ -97,7 +97,7 @@ class App extends Component {
         }).growth
     }
 
-    function isBetter(growth) {
+    function status(growth) {
       if (growth.count < 2) {
         throw new Error('Unable to retrieve statistics')
       }
@@ -114,11 +114,11 @@ class App extends Component {
       .then(s => this.log('statistics', s))
       .then(calculateGrowth)
       .then(g => this.log('growth', g))
-      .then(isBetter)
-      .then(ib => this.log('isBetter', ib))
+      .then(status)
+      .then(ib => this.log('status', ib))
       .catch(error => this.setState({ error: error }))
       .then(result => {
-        this.setState({ isBetter: result })
+        this.setState({ status: result })
       });
   }
 
@@ -128,26 +128,36 @@ class App extends Component {
   }
 
   onCountrySelect = (country) => {
-    console.log('selected', country)
+    this.setState({
+      selectedCountry: country,
+      status: null
+    })
+    this.fetchStatistics(country)
   }
 
   render() {
-    const { countries, isBetter, error } = this.state
+    const {
+      countries,
+      selectedCountry,
+      status,
+      error } = this.state
     return (
       <div className='main tc mt5 pl3 pr3'>
         <header className='f2'>Are things getting better in your country?</header>
         <Dropdown
           data={countries}
           onSelect={this.onCountrySelect}
-          error={error} />
-        {/* {error
-          ? <h2 className='error-color i'>Oops. An error has occured 🤷🏻‍♀️<br />{error.message}</h2>
-          : <Answer isBetter={isBetter} />
-        } */}
+          error={error}
+        />
+        <CountryStatus
+          country={selectedCountry}
+          status={status}
+          error={error}
+        />
         <p className='f3 fw4'>Aren't all the information and news about COVID-19 situation in the world make you anxious, sad or intimidated,
         while the only information you are looking for is if the situation has improved or not?
           </p>
-        <footer className='fw'>
+        <footer className='fw mt5'>
           For more information check <a href='https://www.worldometers.info/coronavirus/'>Corona Virus Updates</a> for your country
         </footer>
       </div>

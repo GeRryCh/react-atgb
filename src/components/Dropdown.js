@@ -4,7 +4,7 @@ import Error from './Error'
 import Loading from './Loading';
 
 const Dropbox = ({ data, onSelect, error }) => {
-  if (error) {
+  if (!data && error) {
     return <Error error={error} />
   }
   if (!data) {
