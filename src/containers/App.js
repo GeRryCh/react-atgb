@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Answer from '../components/Answer'
-import Dropdown from 'react-select'
+import Dropdown from '../components/Dropdown'
 import 'tachyons'
 
 class App extends Component {
@@ -11,7 +11,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.fetchCountries()
+    this.fetchCountries().catch(error => this.setState({ error: error }))
   }
 
   async fetchCountries() {
@@ -137,20 +137,15 @@ class App extends Component {
       <div className='main tc mt5 pl3 pr3'>
         <header className='f2'>Are things getting better in your country?</header>
         <Dropdown
-          className='tl mt4 measure center black-color'
-          placeholderClassName='mv1-l black-color'
-          arrowClassName='mv1-l'
-          options={countries}
-          onChange={this.onCountrySelect}
-          placeholder="Select a country"
-        />
+          data={countries}
+          onSelect={this.onCountrySelect}
+          error={error} />
         {/* {error
           ? <h2 className='error-color i'>Oops. An error has occured 🤷🏻‍♀️<br />{error.message}</h2>
           : <Answer isBetter={isBetter} />
         } */}
         <p className='f3 fw4'>Aren't all the information and news about COVID-19 situation in the world make you anxious, sad or intimidated,
         while the only information you are looking for is if the situation has improved or not?
-        Then this site is for you! It displays an answer, based on a statistics updated every day, to the only question you have.
           </p>
         <footer className='fw'>
           For more information check <a href='https://www.worldometers.info/coronavirus/'>Corona Virus Updates</a> for your country
