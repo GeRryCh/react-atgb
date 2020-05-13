@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Answer from '../components/Answer'
+import Dropdown from 'react-select'
 import 'tachyons'
 
 class App extends Component {
@@ -88,11 +89,28 @@ class App extends Component {
 
   }
 
+  onCountrySelect = (country) => {
+    console.log('selected', country)
+  }
+
   render() {
     const { isBetter, error } = this.state
+    const options = [
+      { label: 'Israel', value: 'israel' },
+      { label: 'United States', value: 'us' },
+      { label: 'Spain', value: 'sp' }
+    ]
     return (
-      <div className='main tc mt3 pl3 pr3'>
+      <div className='main tc mt5 pl3 pr3'>
         <header className='f2'>Are things getting better in your country?</header>
+        <Dropdown
+          className='tl mt4 measure center black-color'
+          placeholderClassName='mv1-l black-color'
+          arrowClassName='mv1-l'
+          options={options}
+          onChange={this.onCountrySelect}
+          placeholder="Select a country"
+        />
         {error ? <h2 className='error-color i'>Oops. An error has occured 🤷🏻‍♀️<br />{error.message}</h2> :
           <Answer isBetter={isBetter} />
         }
