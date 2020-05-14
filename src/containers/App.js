@@ -154,8 +154,11 @@ class App extends Component {
           status={status}
           error={error}
         />
-        <p className='f3 fw4'>Aren't all the information and news about COVID-19 situation in the world make you anxious, sad or intimidated,
-        while the only information you are looking for is if the situation has improved or not?
+        <p className='f3 fw4'>
+          Do the news regarding COVID-19 situation
+          in the world make you anxious, sad or intimidated,
+          while the only information you've been looking is to know if the situation has improved? <br /><br />
+          Then this site is for you. It calculates an answer to this question based on a daily statistics.
           </p>
         <footer className='mv5'>
           For more information check <a href='https://www.worldometers.info/coronavirus/'>Corona Virus Updates</a> for your country
