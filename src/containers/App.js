@@ -158,7 +158,7 @@ class App extends Component {
           Do the news regarding COVID-19 situation
           in the world make you anxious, sad or intimidated,
           while the only information you've been looking is to know if the situation has improved? <br /><br />
-          Then this site is for you. It calculates an answer to this question based on a daily statistics.
+          Then this site is for you. It produces an answer based on a daily statistics.
           </p>
         <footer className='mv5'>
           For more information check <a href='https://www.worldometers.info/coronavirus/'>Corona Virus Updates</a> for your country
