@@ -23,7 +23,7 @@
 }
 
 .main {
-  font-family: 'Samsung Sharp Sans Medium';
+  font-family: 'Samsung Sharp Sans Medium', Fallback, sans-serif;
   color: #6886c5;
   margin-left: 10vw;
   margin-right: 10vw;

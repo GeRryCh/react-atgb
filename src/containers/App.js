@@ -157,7 +157,7 @@ class App extends Component {
         <p className='f3 fw4'>Aren't all the information and news about COVID-19 situation in the world make you anxious, sad or intimidated,
         while the only information you are looking for is if the situation has improved or not?
           </p>
-        <footer className='fw mt5'>
+        <footer className='mv5'>
           For more information check <a href='https://www.worldometers.info/coronavirus/'>Corona Virus Updates</a> for your country
         </footer>
       </div>
