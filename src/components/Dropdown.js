@@ -1,6 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import Error from './Error'
+import './Dropdown.css'
 import Loading from './Loading';
 
 const Dropbox = ({ data, onSelect, error }) => {
@@ -12,9 +13,9 @@ const Dropbox = ({ data, onSelect, error }) => {
   }
   return (
     <Select
-      className='tl mt4 measure center black-color'
-      placeholderClassName='mv1-l black-color'
-      arrowClassName='mv1-l'
+      className='tl mw7 mt4 center black-color'
+      classNamePrefix='react-select'
+      placeholderClassName='black-color'
       options={data}
       onChange={onSelect}
       placeholder="Select a country"
