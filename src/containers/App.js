@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import '../style/App.css';
 import CountryStatus from '../components/CountryStatus'
 import Dropdown from '../components/Dropdown'
 import 'tachyons'

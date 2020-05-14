@@ -1,7 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
 import Error from './Error'
-import './Dropdown.css'
 import Loading from './Loading';
 
 const Dropbox = ({ data, onSelect, error }) => {
