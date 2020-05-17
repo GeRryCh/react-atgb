@@ -1,4 +1,4 @@
-const reduceProperty = function (xs, groupBy, prop) {
+const reduceProperty = (xs, groupBy, prop) => {
   return xs.reduce(function (rv, x) {
     rv[x[groupBy]] = rv[x[groupBy]] || 0;
     rv[x[groupBy]] += x[prop];
@@ -6,7 +6,7 @@ const reduceProperty = function (xs, groupBy, prop) {
   }, {});
 };
 
-function calculateGrowth(statistics) {
+const calculateGrowth = (statistics) => {
   const processed = reduceProperty(statistics, 'Date', 'Cases');
 
   return Object.values(processed)
@@ -23,9 +23,9 @@ function calculateGrowth(statistics) {
       growth: [],
       prev: 0
     }).growth;
-}
+};
 
-function getStatus(stats) {
+export const getStatus = (stats) => {
   const growth = calculateGrowth(stats);
   if (growth.count < 2) {
     throw new Error('Unable to retrieve statistics');
@@ -33,6 +33,4 @@ function getStatus(stats) {
 
   console.log('growth', growth);
   return growth[1] < growth[0];
-}
-
-export default getStatus;
+};

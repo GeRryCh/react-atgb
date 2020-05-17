@@ -4,7 +4,7 @@ import CountryStatus from '../components/CountryStatus';
 import Dropdown from '../components/Dropdown';
 import 'tachyons';
 import NetworkClient from '../networking/NetworkClient';
-import getStatus from '../domain/Statistics';
+import * as Statistics from '../domain/Statistics';
 
 
 class App extends Component {
@@ -46,7 +46,7 @@ class App extends Component {
     });
 
     NetworkClient.fetchStatistics(country)
-      .then(stats => getStatus(stats))
+      .then(stats => Statistics.getStatus(stats))
       .catch(error => this.setState({ error: error }))
       .then(result => {
         this.setState({ status: result });
