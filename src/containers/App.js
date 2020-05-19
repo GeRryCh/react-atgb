@@ -5,6 +5,7 @@ import Dropdown from '../components/Dropdown';
 import 'tachyons';
 import NetworkClient from '../networking/NetworkClient';
 import * as Statistics from '../domain/Statistics';
+import by from '../utils/sort';
 
 
 class App extends Component {
@@ -19,15 +20,7 @@ class App extends Component {
       .then(result =>
         this.setState({
           countries: result
-            .sort((lhs, rhs) => {
-              if (lhs.Country > rhs.Country) {
-                return 1;
-              }
-              if (lhs.Country < rhs.Country) {
-                return -1;
-              }
-              return 0;
-            })
+            .sort(by('Country'))
             .map(c => {
               return {
                 label: c.Country,
